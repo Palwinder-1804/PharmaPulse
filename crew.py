@@ -28,6 +28,7 @@ pharma_crew = Crew(
     ],
 
     process=Process.sequential,  # jaruri hai ye laadle
+    tracing=True,
     verbose=True,
     max_rpm=8 #gareeb hu api limit hojati h 
     
