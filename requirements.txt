@@ -15,3 +15,4 @@ langchain-openai
 python-dotenv
 duckduckgo-search
 litellm
+langchain-groq
