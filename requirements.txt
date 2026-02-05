@@ -3,6 +3,7 @@ streamlit
 
 numpy
 plotly
+dash
 
 pandas
 
