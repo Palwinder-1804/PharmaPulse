@@ -1,5 +1,5 @@
 from crewai import Agent
-from llm import llm
+from llm import strategic_llm as llm
 
 signal_agent = Agent(
     role="Strategic Signal Analyst",

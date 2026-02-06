@@ -4,13 +4,18 @@ from agents.scout_agent import scout_agent
 
 scouting_task = Task(
     description=(
-        "Search for the MOST IMPORTANT pharmaceutical industry news from the past 7 days.\n\n"
+        "You are provided with external pharmaceutical news data below:\n\n"
+        "{external_news_data}\n\n"
+
+        "Your job is to analyze this data and identify ONLY the MOST "
+        "strategically significant pharmaceutical events from the past 7 days.\n\n"
 
         "🔴 STRICT RULES:\n"
-        "- Perform MAXIMUM 2 searches.\n"
-        "- Do NOT search repeatedly.\n"
-        "- Ignore low-impact news.\n"
-        "- Prioritize strategic developments only.\n\n"
+        "- Do NOT attempt to call any search tool.\n"
+        "- Do NOT generate new search queries.\n"
+        "- Do NOT fabricate information.\n"
+        "- Only analyze the provided news data.\n"
+        "- Ignore low-impact or irrelevant news.\n\n"
 
         "🎯 Focus Areas:\n"
         "- Major drug launches\n"
@@ -36,5 +41,4 @@ scouting_task = Task(
     agent=scout_agent,
 
     expected_output="A structured list of the top 5 strategic pharma events.",
-
 )

@@ -1,6 +1,6 @@
 from crewai import Agent
 from tools.search_tool import search_tool
-from llm import llm
+from llm import scout_llm as llm
 
 
 scout_agent = Agent(
@@ -24,4 +24,6 @@ scout_agent = Agent(
     llm=llm,
 
     verbose=True,
+
+    allow_delegation=False
 )

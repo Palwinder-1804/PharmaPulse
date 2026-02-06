@@ -149,7 +149,17 @@ def update_dashboard(n):
 
     # Risk numeric mapping
     risk_map = {"Low": 1, "Medium": 2, "High": 3}
-    risk_value = risk_map.get(parsed["risk"], 0)
+    risk_text = parsed["risk"].strip().lower()
+    
+
+    if "high" in risk_text:
+        risk_value = 3
+    elif "medium" in risk_text:
+        risk_value = 2
+    elif "low" in risk_text:
+        risk_value = 1
+    else:
+        risk_value = 0
 
     # Gauge
     gauge_fig = go.Figure(go.Indicator(

@@ -1,5 +1,5 @@
 from crewai import Agent
-from llm import llm
+from llm import strategic_llm as llm
 
 supervisor_agent = Agent(
     role="Pharma Intelligence Supervisor",
