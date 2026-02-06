@@ -1,21 +1,23 @@
-import os
-from dotenv import load_dotenv
 from crewai import LLM
 
-load_dotenv()
+# ==============================
+# SCOUT MODEL (Lightweight)
+# ==============================
 
-# Scout model (lightweight)
 scout_llm = LLM(
-    model="groq/llama-3.1-8b-instant",
-    api_key=os.getenv("GROQ_API_KEY"),
+    model="ollama/phi3:mini",
+    base_url="http://localhost:11434",
     temperature=0,
-    max_tokens=400   #  reduce
+    max_tokens=400
 )
 
-#  Strategy models
+# ==============================
+# STRATEGIC MODEL
+# ==============================
+
 strategic_llm = LLM(
-    model="groq/llama-3.1-8b-instant",
-    api_key=os.getenv("GROQ_API_KEY"),
+    model="ollama/phi3:mini",
+    base_url="http://localhost:11434",
     temperature=0.2,
-    max_tokens=600   #  reduce
+    max_tokens=600
 )

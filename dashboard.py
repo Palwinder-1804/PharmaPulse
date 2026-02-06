@@ -1,19 +1,21 @@
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, State,callback_context
 import plotly.graph_objects as go
 import plotly.express as px
 import dash_bootstrap_components as dbc
 from run_pipeline import run_pipeline
 import pandas as pd
 import re
+import time
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
+app = Dash(__name__, external_stylesheets=[dbc.themes.DARKLY])
 app.title = "Pharma Executive Intelligence"
 
 
-# parser supervisor agent ke ouptut ke liye
+# =========================
+# PARSERS
+# =========================
 
 def parse_supervisor(text):
-
     market = re.search(r"Overall Market Condition:(.*?)(🚨|Top Strategic Priority:)", text, re.S)
     priority = re.search(r"Top Strategic Priority:(.*?)(📊|Risk Concentration:)", text, re.S)
     risk = re.search(r"Risk Concentration:(.*?)(🎯|Immediate Executive Action:)", text, re.S)
@@ -49,8 +51,7 @@ def parse_scout_data(text):
 
     company_list = []
     for c in companies:
-        parts = c.split(",")
-        for p in parts:
+        for p in c.split(","):
             company_list.append(p.strip())
 
     company_df = pd.DataFrame({"Company": company_list})
@@ -64,55 +65,71 @@ def parse_scout_data(text):
     return company_count, therapy_count
 
 
-#layout
+# =========================
+# LAYOUT
+# =========================
 
 app.layout = dbc.Container([
 
-    dbc.Row([
-        dbc.Col(html.H1("Pharma Executive Intelligence Dashboard",
-                        className="text-center text-info my-4"))
-    ]),
+    dcc.Interval(id="auto-refresh", interval=60*1000, n_intervals=0),
+
+    html.H1(
+        "🚀 Pharma Intelligence War Room",
+        style={
+            "textAlign": "center",
+            "fontSize": "36px",
+            "fontWeight": "bold",
+            "marginBottom": "20px",
+            "color": "#00F5FF"
+        }
+    ),
 
     dbc.Row([
-        dbc.Col(dbc.Button("Run Intelligence Engine",
-                           id="run-btn",
-                           color="warning",
-                           className="mb-4"), width="auto")
-    ]),
+        dbc.Col(
+            dbc.Button("🔄 Refresh Now",
+                       id="refresh-now",
+                       color="warning",
+                       size="lg"),
+            width="auto"
+        ),
+        dbc.Col(
+            html.Div(id="refresh-status",
+                     style={"marginTop": "10px", "color": "#00F5FF"}),
+            width="auto"
+        )
+    ], className="mb-4"),
 
     # Executive Cards
     dbc.Row([
         dbc.Col(dbc.Card([
-            dbc.CardHeader("Overall Market Condition"),
+            dbc.CardHeader("🌍 Overall Market Condition"),
             dbc.CardBody(html.P(id="market-condition"))
-        ], color="dark", inverse=True), width=6),
+        ]), width=6),
 
         dbc.Col(dbc.Card([
-            dbc.CardHeader("Top Strategic Priority"),
+            dbc.CardHeader("🔥 Top Strategic Priority"),
             dbc.CardBody(html.P(id="top-priority"))
         ], color="danger", inverse=True), width=6)
     ], className="mb-4"),
 
     dbc.Row([
         dbc.Col(dbc.Card([
-            dbc.CardHeader("Risk Concentration"),
+            dbc.CardHeader("⚠ Risk Concentration"),
             dbc.CardBody(html.H3(id="risk-level",
                                  className="text-center"))
         ], color="warning", inverse=True), width=4),
 
         dbc.Col(dbc.Card([
-            dbc.CardHeader("Immediate Executive Action"),
+            dbc.CardHeader("🎯 Immediate Executive Action"),
             dbc.CardBody(html.P(id="exec-action"))
         ], color="success", inverse=True), width=8)
     ], className="mb-4"),
 
-    # Graphs Row 1
     dbc.Row([
         dbc.Col(dcc.Graph(id="risk-gauge"), width=6),
         dbc.Col(dcc.Graph(id="signal-pie"), width=6)
     ], className="mb-4"),
 
-    # Graphs Row 2
     dbc.Row([
         dbc.Col(dcc.Graph(id="company-bar"), width=6),
         dbc.Col(dcc.Graph(id="therapy-bar"), width=6)
@@ -121,7 +138,9 @@ app.layout = dbc.Container([
 ], fluid=True)
 
 
-#ckallback system
+# =========================
+# CALLBACK
+# =========================
 
 @app.callback(
     Output("market-condition", "children"),
@@ -132,25 +151,26 @@ app.layout = dbc.Container([
     Output("signal-pie", "figure"),
     Output("company-bar", "figure"),
     Output("therapy-bar", "figure"),
-    Input("run-btn", "n_clicks")
+    Output("refresh-status", "children"),
+    Input("auto-refresh", "n_intervals"),
+    Input("refresh-now", "n_clicks"),
+    prevent_initial_call=True
 )
-def update_dashboard(n):
+def update_dashboard(n_intervals, refresh_click):
 
-    if not n:
-        return "", "", "", "", {}, {}, {}, {}
+    ctx = callback_context
+    force_refresh = False
 
-    outputs = run_pipeline()
+    if ctx.triggered and ctx.triggered[0]["prop_id"].startswith("refresh-now"):
+        force_refresh = True
 
-    supervisor_text = outputs["supervisor"]
-    signal_text = outputs["signal"]
-    scout_text = outputs["scout"]
+    outputs = run_pipeline(force=force_refresh)
 
-    parsed = parse_supervisor(supervisor_text)
+    parsed = parse_supervisor(outputs["supervisor"])
+    signal_df = parse_signals(outputs["signal"])
+    company_df, therapy_df = parse_scout_data(outputs["scout"])
 
-    # Risk numeric mapping
-    risk_map = {"Low": 1, "Medium": 2, "High": 3}
-    risk_text = parsed["risk"].strip().lower()
-    
+    risk_text = parsed["risk"].lower()
 
     if "high" in risk_text:
         risk_value = 3
@@ -161,46 +181,22 @@ def update_dashboard(n):
     else:
         risk_value = 0
 
-    # Gauge
     gauge_fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=risk_value,
         gauge={
             "axis": {"range": [0, 3]},
-            "steps": [
-                {"range": [0, 1], "color": "green"},
-                {"range": [1, 2], "color": "yellow"},
-                {"range": [2, 3], "color": "red"}
-            ]
-        },
-        title={"text": "Market Risk Index"}
+            "bar": {"color": "#00F5FF"}
+        }
     ))
 
-    # Signal Pie
-    signal_df = parse_signals(signal_text)
-    signal_fig = px.pie(
-        signal_df,
-        names="Signal",
-        values="Count",
-        title="Strategic Signal Distribution"
-    )
+    signal_fig = px.pie(signal_df, names="Signal", values="Count")
 
-    # Company & Therapy Charts
-    company_df, therapy_df = parse_scout_data(scout_text)
+    company_fig = px.bar(company_df, x="Company", y="Count")
 
-    company_fig = px.bar(
-        company_df,
-        x="Company",
-        y="Count",
-        title="Company Activity Frequency"
-    )
+    therapy_fig = px.bar(therapy_df, x="Therapy", y="Count")
 
-    therapy_fig = px.bar(
-        therapy_df,
-        x="Therapy",
-        y="Count",
-        title="Therapy Area Distribution"
-    )
+    status_text = f"Last Updated: {time.strftime('%H:%M:%S')}"
 
     return (
         parsed["market"],
@@ -210,7 +206,8 @@ def update_dashboard(n):
         gauge_fig,
         signal_fig,
         company_fig,
-        therapy_fig
+        therapy_fig,
+        status_text
     )
 
 
