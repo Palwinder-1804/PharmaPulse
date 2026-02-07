@@ -1,28 +1,33 @@
 from crewai import Task
 from agents.supervisor_agent import supervisor_agent
+from tasks.insight_task import insight_task
+
 
 supervisor_task = Task(
     description=(
-        "Review the outputs from Scouting, Signal Classification, "
-        "and Strategic Insight.\n\n"
+        "Using the structured strategic intelligence generated in the previous task, "
+        "generate final executive summary.\n\n"
 
-        "Produce a FINAL EXECUTIVE BRIEF in this STRICT FORMAT:\n\n"
+        "STRICT RULES:\n"
+        "- Output STRICT JSON only.\n"
+        "- No markdown.\n"
+        "- No commentary outside JSON.\n\n"
 
-        "🔎 Overall Market Condition:\n"
-        "(2-3 sentences summarizing global pharma landscape)\n\n"
+        "Required Output Format:\n\n"
 
-        "🚨 Top Strategic Priority:\n"
-        "(Most critical risk or opportunity)\n\n"
-
-        "📊 Risk Concentration:\n"
-        "(Low / Medium / High overall market risk)\n\n"
-
-        "🎯 Immediate Executive Action:\n"
-        "(Clear directive for leadership)\n\n"
-
-        "Keep it concise and boardroom-ready."
+        "{\n"
+        '  "overall_market_condition": "string",\n'
+        '  "top_priority": "string",\n'
+        '  "risk_index": 1-10,\n'
+        '  "capital_allocation_focus": ["string"],\n'
+        '  "immediate_actions": ["string"],\n'
+        '  "executive_summary": "short high-level conclusion"\n'
+        "}\n"
     ),
 
     agent=supervisor_agent,
-    expected_output="Consolidated executive briefing."
+
+    context=[insight_task],
+
+    expected_output="Valid JSON executive summary."
 )

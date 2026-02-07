@@ -1,70 +1,103 @@
-import time
-from crew import scout_crew, strategy_crew
-from tools.search_tool import search_tool
-
-cache = {
-    "scout": None,
-    "signal": None,
-    "insight": None,
-    "supervisor": None,
-    "scout_time": 0,
-    "strategic_time": 0
-}
-
-SCOUT_INTERVAL = 15 * 60
-STRATEGIC_INTERVAL = 6 * 60 * 60
+from market_crew import market_scout_crew, market_strategy_crew
+from product_crew import product_crew
+from services.search_service import (
+    fetch_market_news,
+    fetch_product_intelligence
+)
+import json
 
 
-def run_pipeline(force=False):
+# =====================================
+# 🌍 MARKET INTELLIGENCE PIPELINE
+# =====================================
 
-    current_time = time.time()
+def run_market_pipeline():
 
-    # ===============================
-    # 1️⃣ SCOUT (15 min)
-    # ===============================
-    if (
-        force
-        or cache["scout"] is None
-        or current_time - cache["scout_time"] > SCOUT_INTERVAL
-    ):
+    # 🔹 Fetch fresh pharma market news
+    external_news_data = fetch_market_news()
 
-        print("🔄 Running Scout Crew...")
+    # 1️⃣ Run Scout Crew
+    scout_result = market_scout_crew.kickoff(
+        inputs={"external_news_data": external_news_data}
+    )
 
-        search_results = search_tool.run(
-            search_query=(
-                "pharmaceutical industry news past 7 days "
-                "major drug launches FDA approvals competitor expansions "
-                "pricing disruptions mergers acquisitions"
-            )
-        )
+    scout_output = scout_result.tasks_output[0].raw
 
-        cleaned = str(search_results)[:2500]
+    # 2️⃣ Run Strategy Crew
+    strategy_result = market_strategy_crew.kickoff(
+        inputs={"scout_output": scout_output}
+    )
 
-        result = scout_crew.kickoff(
-            inputs={"external_news_data": cleaned}
-        )
+    signal_output = strategy_result.tasks_output[0].raw
+    insight_output = strategy_result.tasks_output[1].raw
+    supervisor_output = strategy_result.tasks_output[2].raw
 
-        cache["scout"] = result.tasks_output[0].raw
-        cache["scout_time"] = current_time
+    # 🔹 Safe JSON parsing
+    try:
+        supervisor_json = json.loads(supervisor_output)
+    except:
+        supervisor_json = {"raw_output": supervisor_output}
 
-    # ===============================
-    # 2️⃣ STRATEGY (6 hr)
-    # ===============================
-    if (
-        force
-        or cache["strategic_time"] == 0
-        or current_time - cache["strategic_time"] > STRATEGIC_INTERVAL
-    ):
+    return {
+        "market": {
+            "scout": scout_output,
+            "signal": signal_output,
+            "insight": insight_output,
+            "supervisor": supervisor_json
+        }
+    }
 
-        print("🧠 Running Strategy Crew...")
 
-        result = strategy_crew.kickoff(
-            inputs={"scout_output": cache["scout"]}
-        )
+# =====================================
+# 💊 PRODUCT INTELLIGENCE PIPELINE
+# =====================================
 
-        cache["signal"] = result.tasks_output[0].raw
-        cache["insight"] = result.tasks_output[1].raw
-        cache["supervisor"] = result.tasks_output[2].raw
-        cache["strategic_time"] = current_time
+def run_product_pipeline(product_name: str):
 
-    return cache
+    # 🔹 Fetch product-specific intelligence data
+    product_external_data = fetch_product_intelligence(product_name)
+
+    result = product_crew.kickoff(
+        inputs={
+            "product_name": product_name,
+            "external_product_data": product_external_data
+        }
+    )
+
+    product_scout_output = result.tasks_output[0].raw
+    risk_sales_output = result.tasks_output[1].raw
+    usp_output = result.tasks_output[2].raw
+    strategy_output = result.tasks_output[3].raw
+    supervisor_output = result.tasks_output[4].raw
+
+    # 🔹 Safe JSON parsing
+    try:
+        product_supervisor_json = json.loads(supervisor_output)
+    except:
+        product_supervisor_json = {"raw_output": supervisor_output}
+
+    return {
+        "product": {
+            "product_name": product_name,
+            "scout": product_scout_output,
+            "risk_sales": risk_sales_output,
+            "usp_analysis": usp_output,
+            "strategy": strategy_output,
+            "supervisor": product_supervisor_json
+        }
+    }
+
+
+# =====================================
+# 🚀 FULL INTELLIGENCE PIPELINE
+# =====================================
+
+def run_full_intelligence(product_name: str):
+
+    market_data = run_market_pipeline()
+    product_data = run_product_pipeline(product_name)
+
+    return {
+        "market_intelligence": market_data["market"],
+        "product_intelligence": product_data["product"]
+    }

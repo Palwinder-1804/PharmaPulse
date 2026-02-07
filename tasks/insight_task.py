@@ -1,36 +1,34 @@
 from crewai import Task
 from agents.insight_agent import insight_agent
+from tasks.signal_task import signal_task
 
 
 insight_task = Task(
     description=(
-        "Analyze the provided pharma events and convert them into "
-        "BOARDROOM-LEVEL strategic intelligence.\n\n"
+        "Using the classified strategic signals from the previous task, "
+        "generate board-level strategic intelligence.\n\n"
 
-        "Focus on:\n"
-        "- Competitive advantage shifts\n"
-        "- Market risks\n"
-        "- Revenue opportunities\n"
-        "- Industry disruption\n\n"
+        "IMPORTANT RULES:\n"
+        "- Output STRICT JSON only.\n"
+        "- Do NOT use markdown.\n"
+        "- Do NOT add explanations outside JSON.\n"
+        "- If output is not valid JSON, it will be rejected.\n\n"
 
-        "⚠️ STRICT OUTPUT FORMAT:\n\n"
+        "Required Output Format:\n\n"
 
-        "🚨 Strategic Insight:\n"
-        "(1–2 powerful sentences)\n\n"
-
-        "📊 Market Implication:\n"
-        "(Explain what this means for the industry)\n\n"
-
-        "⚠️ Risk Level:\n"
-        "Low / Medium / High\n\n"
-
-        "✅ Recommended Action:\n"
-        "(What should leadership do?)\n\n"
-
-        "Repeat for each major event."
+        "{\n"
+        '  "market_trend": "string",\n'
+        '  "threat_level": "Low | Medium | High",\n'
+        '  "opportunity_areas": ["string"],\n'
+        '  "competitive_pressure_score": 1-10,\n'
+        '  "recommended_moves": ["string"],\n'
+        '  "strategic_summary": "short executive-level explanation"\n'
+        "}\n"
     ),
 
     agent=insight_agent,
 
-    expected_output="Executive-ready pharma intelligence report.",
+    context=[signal_task],
+
+    expected_output="Valid JSON object containing strategic intelligence."
 )

@@ -1,20 +1,20 @@
 from crewai import Agent
 from llm import strategic_llm as llm
 
+
 supervisor_agent = Agent(
-    role="Pharma Intelligence Supervisor",
+    role="Pharmaceutical Executive Decision Engine",
 
     goal=(
-        "Review scouting data, classified signals, and strategic insights. "
-        "Deliver a final consolidated executive briefing highlighting "
-        "priority risks, opportunities, and recommended leadership focus."
+        "Review strategic intelligence and produce final executive-level "
+        "decision summary in STRICT JSON format."
     ),
 
     backstory=(
-        "You are the Head of Global Strategy overseeing market intelligence teams. "
-        "You synthesize multi-layer intelligence into a single decisive executive summary."
+        "You operate at CEO-level. You produce structured executive "
+        "decision intelligence optimized for dashboards and APIs."
     ),
 
     llm=llm,
-    verbose=True
+    verbose=False
 )

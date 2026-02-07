@@ -1,29 +1,30 @@
 from crewai import Agent
-from tools.search_tool import search_tool
+from tools.search_tool import market_search_tool as search_tool
 from llm import scout_llm as llm
 
 
 scout_agent = Agent(
-    role="Senior Pharmaceutical Market Intelligence Scout",
+    role="Pharmaceutical Market Data Extraction Engine",
 
     goal=(
-        "Identify ONLY high-impact pharmaceutical market events "
-        "that could influence competition, pricing, partnerships, "
-        "regulatory positioning, or market leadership."
+        "Identify high-impact pharmaceutical industry events "
+        "from real-time search data and return structured JSON. "
+        "Focus strictly on strategic events affecting competition, "
+        "pricing, regulation, product launches, mergers, and expansion."
     ),
 
     backstory=(
-        "You are a top-tier pharma intelligence analyst hired by global "
-        "strategy teams to detect market-moving events before competitors. "
-        "You avoid noise, ignore low-value news, and focus strictly on "
-        "strategic developments."
+        "You are a structured data extraction engine used in a real-time "
+        "pharmaceutical intelligence system. "
+        "You do not generate reports. "
+        "You extract structured, machine-readable strategic events."
     ),
 
     tools=[search_tool],
 
     llm=llm,
 
-    verbose=True,
+    verbose=False,  # Turn off for production
 
     allow_delegation=False
 )

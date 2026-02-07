@@ -4,6 +4,12 @@ from crewai_tools import SerperDevTool
 
 load_dotenv()
 
-search_tool = SerperDevTool(
-    n_results=5
+# 🔹 Market News Search Tool
+market_search_tool = SerperDevTool(
+    n_results=6
+)
+
+# 🔹 Product Intelligence Search Tool
+product_search_tool = SerperDevTool(
+    n_results=8
 )

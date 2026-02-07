@@ -1,20 +1,26 @@
 from crewai import Agent
 from llm import strategic_llm as llm
 
+
 signal_agent = Agent(
-    role="Strategic Signal Analyst",
+    role="Pharmaceutical Strategic Signal Classification Engine",
 
     goal=(
-        "Analyze pharma news and classify events into strategic signals such as "
-        "Competitive Threat, Market Opportunity, Pricing Shift, Regulatory Risk, "
-        "or Brand Momentum."
+        "Analyze structured pharmaceutical events and classify them into "
+        "strategic signal categories. "
+        "Return strictly structured JSON output suitable for real-time "
+        "decision systems."
     ),
 
     backstory=(
-        "You specialize in recognizing patterns and highlighting events "
-        "that require executive attention."
+        "You are a signal classification engine within a real-time "
+        "pharmaceutical intelligence platform. "
+        "You do not generate reports. "
+        "You convert structured event data into categorized strategic signals "
+        "with quantified impact scores."
     ),
 
     llm=llm,
-    verbose=True
+
+    verbose=False  # Production safe
 )
