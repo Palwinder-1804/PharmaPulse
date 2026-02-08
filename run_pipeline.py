@@ -1,10 +1,11 @@
 from market_crew import market_scout_crew, market_strategy_crew
 from product_crew import product_crew
+from services.json_storage import save_frontend_format
+
 from services.search_service import (
     fetch_market_news,
     fetch_product_intelligence
 )
-import json
 
 
 # =====================================
@@ -13,17 +14,16 @@ import json
 
 def run_market_pipeline():
 
-    # 🔹 Fetch fresh pharma market news
     external_news_data = fetch_market_news()
 
-    # 1️⃣ Run Scout Crew
+    # 1️⃣ Scout Crew
     scout_result = market_scout_crew.kickoff(
         inputs={"external_news_data": external_news_data}
     )
 
     scout_output = scout_result.tasks_output[0].raw
 
-    # 2️⃣ Run Strategy Crew
+    # 2️⃣ Strategy Crew
     strategy_result = market_strategy_crew.kickoff(
         inputs={"scout_output": scout_output}
     )
@@ -32,19 +32,14 @@ def run_market_pipeline():
     insight_output = strategy_result.tasks_output[1].raw
     supervisor_output = strategy_result.tasks_output[2].raw
 
-    # 🔹 Safe JSON parsing
-    try:
-        supervisor_json = json.loads(supervisor_output)
-    except:
-        supervisor_json = {"raw_output": supervisor_output}
+    # 🚨 DO NOT PARSE JSON HERE
+    # Keep raw output and let json_storage extract properly
 
     return {
-        "market": {
-            "scout": scout_output,
-            "signal": signal_output,
-            "insight": insight_output,
-            "supervisor": supervisor_json
-        }
+        "scout": scout_output,
+        "signal": signal_output,
+        "insight": insight_output,
+        "supervisor": supervisor_output   # ← RAW
     }
 
 
@@ -54,7 +49,6 @@ def run_market_pipeline():
 
 def run_product_pipeline(product_name: str):
 
-    # 🔹 Fetch product-specific intelligence data
     product_external_data = fetch_product_intelligence(product_name)
 
     result = product_crew.kickoff(
@@ -70,21 +64,15 @@ def run_product_pipeline(product_name: str):
     strategy_output = result.tasks_output[3].raw
     supervisor_output = result.tasks_output[4].raw
 
-    # 🔹 Safe JSON parsing
-    try:
-        product_supervisor_json = json.loads(supervisor_output)
-    except:
-        product_supervisor_json = {"raw_output": supervisor_output}
+    # 🚨 DO NOT PARSE JSON HERE
 
     return {
-        "product": {
-            "product_name": product_name,
-            "scout": product_scout_output,
-            "risk_sales": risk_sales_output,
-            "usp_analysis": usp_output,
-            "strategy": strategy_output,
-            "supervisor": product_supervisor_json
-        }
+        "product_name": product_name,
+        "scout": product_scout_output,
+        "risk_sales": risk_sales_output,
+        "usp_analysis": usp_output,
+        "strategy": strategy_output,
+        "supervisor": supervisor_output   # ← RAW
     }
 
 
@@ -97,7 +85,15 @@ def run_full_intelligence(product_name: str):
     market_data = run_market_pipeline()
     product_data = run_product_pipeline(product_name)
 
+    # Save React-ready JSON (this will extract all JSON safely)
+    file_path = save_frontend_format(
+        market_data,
+        product_data
+    )
+
+    print(f"\n💾 React-ready JSON saved to {file_path}")
+
     return {
-        "market_intelligence": market_data["market"],
-        "product_intelligence": product_data["product"]
+        "market_intelligence": market_data,
+        "product_intelligence": product_data
     }

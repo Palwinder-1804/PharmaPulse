@@ -4,22 +4,22 @@ from agents.scout_agent import scout_agent
 
 scouting_task = Task(
     description=(
-        "You are provided with structured pharmaceutical news data:\n\n"
+        "You are given structured pharmaceutical market news data:\n\n"
         "{external_news_data}\n\n"
 
-        "Analyze ONLY this data and extract the TOP 5 most strategically "
-        "significant pharmaceutical events from the past 7 days.\n\n"
+        "Your job is to extract the TOP 5 most strategically significant events.\n\n"
 
-        "STRICT RULES:\n"
-        "- Do NOT call any search tool.\n"
-        "- Do NOT generate new queries.\n"
-        "- Do NOT fabricate information.\n"
-        "- Only analyze the provided data.\n"
-        "- Ignore low-impact news.\n"
-        "- Output STRICT JSON only.\n"
-        "- If output is not valid JSON, it will be rejected.\n"
-        "- Do NOT use markdown.\n"
-        "- Do NOT add commentary outside JSON.\n\n"
+        "STRICT EXECUTION RULES:\n"
+        "1. DO NOT call any tools.\n"
+        "2. DO NOT generate new queries.\n"
+        "3. DO NOT fabricate information.\n"
+        "4. Use ONLY the provided data.\n"
+        "5. Return STRICT VALID JSON.\n"
+        "6. No markdown.\n"
+        "7. No commentary.\n"
+        "8. No reasoning.\n"
+        "9. Output must start with '{' and end with '}'.\n"
+        "10. If no events found, return empty array.\n\n"
 
         "Required Output Format:\n\n"
 
@@ -33,7 +33,7 @@ scouting_task = Task(
         '      "event_type": "Drug Launch | FDA Approval | M&A | Pricing | Expansion",\n'
         '      "summary": "max 40 words",\n'
         '      "strategic_impact": "short explanation",\n'
-        '      "importance_score": 1-10\n'
+        '      "importance_score": 1\n'
         "    }\n"
         "  ]\n"
         "}\n"
@@ -41,5 +41,5 @@ scouting_task = Task(
 
     agent=scout_agent,
 
-    expected_output="Valid JSON object containing top 5 strategic pharmaceutical events."
+    expected_output="Strict valid JSON containing an events array."
 )
