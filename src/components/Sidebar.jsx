@@ -24,7 +24,7 @@ export default function Sidebar ({ isOpen, onToggle, setView }) {
       {/* Sidebar */}
       <aside 
         className={`
-          fixed lg:static inset-y-0 left-0 z-50
+          fixed lg:static inset-y-0 left-0 z-50 rounded-xs
           w-64 bg-white border-r border-gray-200
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -33,7 +33,36 @@ export default function Sidebar ({ isOpen, onToggle, setView }) {
         <div className="h-full flex flex-col">
           {/* Logo/Brand */}
           <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+             <h1 className="
+    relative flex items-center text-xl font-extrabold tracking-tight
+    rounded-full overflow-hidden
+    border border-cyan-400/40
+    bg-white/70 backdrop-blur
+    shadow-[0_0_40px_rgba(34,211,238,0.15)]
+  ">
+    {/* Pharma */}
+    <span className="px-5 py-2 text-slate-800">
+      Pharma
+    </span>
+
+    {/* Pulse */}
+    <span className="
+      relative px-5 py-2
+      text-white
+      bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-400
+      animate-pulseGlow
+    ">
+      Pulse
+
+      {/* ECG flash */}
+      <span className="
+        absolute inset-0
+        bg-white/20
+        translate-x-[-100%]
+        animate-scan
+      " />
+    </span>
+  </h1>
             <button 
               onClick={onToggle}
               className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -67,7 +96,7 @@ export default function Sidebar ({ isOpen, onToggle, setView }) {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
+          {/* <div className="p-4 border-t border-gray-200">
             <div className="flex items-center gap-3 px-2">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600" />
               <div className="flex-1 min-w-0">
@@ -75,7 +104,7 @@ export default function Sidebar ({ isOpen, onToggle, setView }) {
                 <p className="text-xs text-gray-500 truncate">john@company.com</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </aside>
     </>

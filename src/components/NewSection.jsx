@@ -19,7 +19,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
           <div>
             <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
               Market Intelligence Hub
-              <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wide">
+              <span className="px-2 py-0.5 rounded-full border-2 border-red-500 text-red-500 text-sm font-bold uppercase tracking-wide">
                 Live
               </span>
             </h2>
@@ -143,7 +143,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
                             <h3 className="font-bold text-slate-800">Raw News Feed</h3>
                             <span className="text-xs font-medium text-slate-400">{news.length} events</span>
                         </div>
-                        <div className="max-h-[calc(100vh-200px)] overflow-y-auto p-2 space-y-2">
+                        <div className="h-full overflow-y-auto p-2 space-y-2">
                             {news.map((item) => (
                                 <div 
                                     key={item.event_id}
@@ -182,7 +182,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
   return (
     <div 
       onClick={onExpand}
-      className="w-full lg:w-64 bg-white rounded-xl border border-gray-200 p-4 shadow-sm 
+      className="w-full lg:w-64 bg-white rounded-xs border border-gray-200 p-4 shadow-sm 
       hover:shadow-md hover:border-blue-300 transition-all cursor-pointer group"
     >
       <div className="flex items-center justify-between mb-4">
@@ -203,7 +203,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
         
         {/* Mini Highlights */}
         <div className="space-y-3">
-             {news.slice(0, 3).map((item) => (
+             {news.slice(0, scout_output.events.length).map((item) => (
                <div key={item.event_id} className="pb-3 border-b border-gray-100 last:border-0">
                  <h4 className="text-xs font-medium text-gray-900 mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">
                    {item.title}
@@ -254,7 +254,7 @@ function MetricCard({ label, value, icon, color, footer }) {
 function SectionCard({ title, children, className = "" }) {
     return (
         <div className={`bg-white rounded-xl border border-gray-200 shadow-sm p-6 ${className}`}>
-            <h3 className="text-lg font-bold text-slate-800 mb-4">{title}</h3>
+            <h3 className="text-lg font-bold text-slate-400 mb-4">{title}</h3>
             {children}
         </div>
     );

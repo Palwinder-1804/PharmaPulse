@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { mockChartData, mockInfo, mockInsights, mockNews, mockSnippets } from "./utils/mock-data";
 import Header from "./components/Header";
 import NewsSection from "./components/NewSection";
 import SearchBar from "./components/SearchBar";
@@ -26,37 +25,112 @@ export default function DashboardApp () {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} setView={setView} />
 
       <div className="flex-1 flex flex-col min-w-0">
         <Header onMenuToggle={() => setSidebarOpen(true)} />
 
         <main className="flex-1 overflow-auto">
-          <div className="h-full p-4 lg:p-8">
+          <div className={`h-full ${view === 'dashboard' ? 'px-0' : 'p-8'}`} >
             
             {view === 'dashboard' && (
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+                <div className="h-full flex">
+                  <div className="absolute inset-0 -z-20 overflow-hidden">
+                  {[...Array(6)].map((_, i) => (
+                    <span
+                      key={i}
+                      className="absolute h-24 w-24 rounded-full bg-cyan-400/20 blur-2xl animate-float"
+                      style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                        animationDelay: `${i * 2}s`,
+                      }}
+                    />
+                  ))}
+                </div>
 
-                  <div className="h-full flex flex-col gap-10">
-                    <header className="w-full bg-background/80 backdrop-blur text-center">
-                      <div className="max-w-7xl mx-auto px-6 py-4">
-                        <h1 className="text-2xl font-black tracking-tight text-slate-800">
-                          PharmaPulse
-                        </h1>
-                        <p className="text-sm text-slate-500">
-                          Real-time pharma insights & updates
-                        </p>
-                      </div>
+                  <div className="h-full w-full flex flex-col justify-center gap-10">
+                    <header className="relative w-full bg-background/80 backdrop-blur text-center overflow-hidden">
+                    <div className="absolute w-full h-24 overflow-hidden">
+                      <svg
+                        viewBox="0 0 1000 100"
+                        preserveAspectRatio="none"
+                        className="w-full h-full"
+                      >
+                        <path
+                          d="
+                            M0 50 
+                            L80 50 
+                            L100 30 
+                            L120 70 
+                            L140 50 
+                            L220 50
+                            L240 20 
+                            L260 80 
+                            L280 50
+                            L360 50
+                            L380 30
+                            L400 70
+                            L420 50
+                            L1000 50
+                          "
+                          className="ecg-line"
+                        />
+                      </svg>
+                    </div>
+
+                      {/* animated pulse */}
+                      {/* <div className="absolute inset-0 -z-10 animate-pulseSlow bg-gradient-to-r from-cyan-200/20 via-blue-200/30 to-cyan-200/20" /> */}
+
+                      <div className="flex flex-col justify-center items-center max-w-7xl mx-auto px-6 py-6 gap-3">
+  <h1 className="
+    relative flex items-center text-2xl font-extrabold tracking-tight
+    rounded-full overflow-hidden
+    border border-cyan-400/40
+    bg-white/70 backdrop-blur
+    shadow-[0_0_40px_rgba(34,211,238,0.15)]
+  ">
+    {/* Pharma */}
+    <span className="px-5 py-2 text-slate-800">
+      Pharma
+    </span>
+
+    {/* Pulse */}
+    <span className="
+      relative px-5 py-2
+      text-white
+      bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-400
+      animate-pulseGlow
+    ">
+      Pulse
+
+      {/* ECG flash */}
+      <span className="
+        absolute inset-0
+        bg-white/20
+        translate-x-[-100%]
+        animate-scan
+      " />
+    </span>
+  </h1>
+
+  <p className="text-sm text-slate-500 max-w-md text-center">
+    Real-time pharma insights & updates
+  </p>
+</div>
+
+                      
                     </header>
+                    
+
                     <div className="flex items-center justify-center">
-                      <div className="w-full max-w-2xl px-4">
-                        <SearchBar onSearch={handleSearch}  />
+                      <div className="w-full max-w-2xl animate-breathe">
+                        <SearchBar onSearch={handleSearch} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="lg:block hidden">
+                  <div className="hidden w-64 lg:block lg:flex lg:justify-end">
                     <NewsSection 
                       isExpanded={false}
                       onExpand={handleExpandNews}
@@ -75,7 +149,6 @@ export default function DashboardApp () {
                     <NewsSection 
                       isExpanded={false}
                       onExpand={handleExpandNews}
-                      news={mockNews}
                     />
                   </div>
                 )}
@@ -88,7 +161,6 @@ export default function DashboardApp () {
                 <NewsSection 
                   isExpanded={true}
                   onCollapse={handleCollapseNews}
-                  news={mockNews}
                 />
               </div>
             )}

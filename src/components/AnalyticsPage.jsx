@@ -26,10 +26,15 @@ export default function AnalyticsPage({searchQuery}) {
     const marketStrategy = detailedReport.strategy_recommendation.existing_product_market_strategy;
     
     // Helper for risk color
-    const getRiskColor = (score) => {
+    const getRiskColorScore = (score) => {
         if (score >= 70) return "text-red-500";
         if (score >= 40) return "text-yellow-400";
         return "text-green-500";
+    };
+    const getRiskColorBar = (score) => {
+        if (score >= 70) return "bg-green-500";
+        if (score >= 40) return "bg-yellow-300";
+        return "bg-red-400";
     };
 
     return (
@@ -37,12 +42,15 @@ export default function AnalyticsPage({searchQuery}) {
             
             {/* PRODUCT SECTION */}
             <aside
-                onMouseEnter={() => {setProduct(true)}} 
+                onClick={() => {setProduct(true)}} 
                 onMouseLeave={() => {setProduct(false)}} 
                 className={`
                     bg-white rounded-2xl p-6
-                    shadow transition-all duration-300 ease-in-out
-                    transform border border-slate-100
+                    shadow-sm border border-slate-100
+                    transition-all duration-300 ease-out
+                    hover:scale-[1.015]
+                    hover:shadow-xl
+                    hover:border-slate-200
                     ${product ? 'col-span-2 scale-[1.01] shadow-xl z-10' : 'col-span-1 scale-100'} 
                     ${competitors ? 'hidden' : ''}`}
             >
@@ -52,7 +60,7 @@ export default function AnalyticsPage({searchQuery}) {
                         <span className="text-sm text-slate-500 font-medium">{summaryReport.market_position}</span>
                     </div>
                     <div className="text-right">
-                         <div className={`text-2xl font-bold ${getRiskColor(detailedReport.risk_and_sales_monitoring.overall_risk_score)}`}>{detailedReport.risk_and_sales_monitoring.overall_risk_score}/100</div>
+                         <div className={`text-2xl font-bold ${getRiskColorScore(detailedReport.risk_and_sales_monitoring.overall_risk_score)}`}>{detailedReport.risk_and_sales_monitoring.overall_risk_score}/100</div>
                          <div className="text-xs text-slate-500 uppercase tracking-wide">Risk Score</div>
                     </div>
                 </div>
@@ -69,7 +77,7 @@ export default function AnalyticsPage({searchQuery}) {
                         </div>
                         <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                             <div 
-                                className="h-full bg-blue-500 rounded-full transition-all duration-500" 
+                                className={`h-full ${getRiskColorBar(detailedReport.risk_and_sales_monitoring.market_opportunity_score)} rounded-full transition-all duration-500`}
                                 style={{ width: `${detailedReport.risk_and_sales_monitoring.market_opportunity_score}%`}}
                             />
                         </div>
@@ -90,25 +98,53 @@ export default function AnalyticsPage({searchQuery}) {
             </aside>
 
             {/* KEY METRICS CARDS */}
-            <div className={`flex flex-col gap-4 ${product || competitors ? 'hidden md:flex' : ''}`}>
-                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex-1">
-                     <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Strongest USP</h3>
-                     <p className="text-sm font-medium text-slate-800 leading-relaxed">{summaryReport.strongest_usp}</p>
+            <div className={`
+                flex flex-col gap-4 
+                ${product || competitors ? 'hidden md:flex' : ''}
+            `}
+            >
+                 <div className="
+                    group
+                    bg-white rounded-2xl p-6
+                    shadow-sm border border-slate-100 flex-1
+                    transition-all duration-200 ease-out
+                    hover:scale-[1.015]
+                    hover:shadow-xl
+                    hover:border-slate-200
+                    hover:bg-green-500
+                ">
+
+                     <h3 
+                        className={`text-xs font-semibold text-green-600 group-hover:text-white uppercase tracking-wider mb-3`}>Strongest USP</h3>
+                     <p className="text-sm font-medium text-slate-600 group-hover:text-white leading-relaxed">{summaryReport.strongest_usp}</p>
                  </div>
-                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex-1">
-                     <h3 className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-3">Biggest Risk</h3>
-                     <p className="text-sm font-medium text-slate-800 leading-relaxed">{summaryReport.biggest_risk_factor}</p>
+                 <div className="
+                    group
+                    bg-white rounded-2xl p-6
+                    shadow-sm border border-slate-100 flex-1
+                    transition-all duration-200 ease-out
+                    hover:scale-[1.015]
+                    hover:shadow-xl
+                    hover:border-slate-200
+                    hover:bg-red-500
+                ">
+
+                     <h3 className="text-xs font-semibold text-red-600 group-hover:text-white uppercase tracking-wider mb-3">Biggest Risk</h3>
+                     <p className="text-sm font-medium text-slate-600 group-hover:text-white leading-relaxed">{summaryReport.biggest_risk_factor}</p>
                  </div>
             </div>
 
             {/* COMPETITORS SECTION */}
             <aside
-                onMouseEnter={() => {setCompetitors(true)}} 
+                onClick={() => {setCompetitors(true)}} 
                 onMouseLeave={() => {setCompetitors(false)}}
                 className={`
                     bg-white rounded-2xl p-6
-                    shadow transition-all duration-300 ease-in-out
-                    transform border border-slate-100
+                    shadow-sm border border-slate-100
+                    transition-all duration-300 ease-out
+                    hover:scale-[1.015]
+                    hover:shadow-xl
+                    hover:border-slate-200
                     ${product ? 'hidden' : ''}
                     ${competitors 
                     ? 'col-span-2 scale-[1.01] shadow-xl z-10' 
@@ -136,7 +172,7 @@ export default function AnalyticsPage({searchQuery}) {
                                 </div>
                                 <div className="flex justify-between text-xs text-slate-500">
                                     <span>{comp.company}</span>
-                                    <span className={`px-2 py-0.5 rounded-full ${comp.approval_status === 'Approved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                    <span className={`px-2 py-0.5 rounded-full bg-green-100 text-green-700`}>
                                         {comp.approval_status}
                                     </span>
                                 </div>
@@ -169,7 +205,15 @@ export default function AnalyticsPage({searchQuery}) {
 
             {/* STRATEGY & CHARTS GRID */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-span-1 md:col-span-3">
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <div className="
+                    bg-white rounded-2xl p-6
+                    shadow-sm border border-slate-100
+                    transition-all duration-300 ease-out
+                    hover:scale-[1.015]
+                    hover:shadow-xl
+                    hover:border-slate-200
+                ">
+
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
@@ -183,7 +227,15 @@ export default function AnalyticsPage({searchQuery}) {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <div className="
+                    bg-white rounded-2xl p-6
+                    shadow-sm border border-slate-100
+                    transition-all duration-300 ease-out
+                    hover:scale-[1.015]
+                    hover:shadow-xl
+                    hover:border-slate-200
+                ">
+
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
@@ -205,7 +257,15 @@ export default function AnalyticsPage({searchQuery}) {
             </div>
 
             {/* EXECUTIVE SUMMARY */}
-            <div className="col-span-1 md:col-span-3 bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 shadow-lg text-white">
+            <div className="
+                col-span-1 md:col-span-3
+                bg-gradient-to-r from-slate-900 to-slate-800
+                rounded-2xl p-6 shadow-lg text-white
+                transition-all duration-300 ease-out
+                hover:-translate-y-1
+                hover:shadow-2xl
+            ">
+
                 <h3 className="font-bold text-white/90 mb-2 uppercase tracking-wide text-xs">Executive Summary</h3>
                 <p className="text-lg font-light leading-relaxed text-slate-100 max-w-4xl">
                     {summaryReport.executive_summary}

@@ -1,103 +1,3 @@
-const mockInsights = {
-  title: "Key Insights",
-  metrics: [
-    { label: "Total Revenue", value: "$124.5K", change: "+12.3%" },
-    { label: "Active Users", value: "8,432", change: "+5.7%" },
-    { label: "Conversion Rate", value: "3.2%", change: "+0.8%" }
-  ]
-};
-
-const mockInfo = {
-  title: "Quick Info",
-  items: [
-    { label: "Last Updated", value: "2 hours ago" },
-    { label: "Data Quality", value: "98.5%" },
-    { label: "Sources", value: "12 active" }
-  ]
-};
-
-const mockChartData = {
-  title: "Performance Overview",
-  description: "Monthly trends and analytics",
-  data: [
-    { month: "Jan", value: 65 },
-    { month: "Feb", value: 72 },
-    { month: "Mar", value: 68 },
-    { month: "Apr", value: 85 },
-    { month: "May", value: 92 },
-    { month: "Jun", value: 88 }
-  ]
-};
-
-const mockSnippets = [
-  {
-    id: 1,
-    title: "Q4 Performance Report",
-    description: "Quarterly results show strong growth across all segments",
-    timestamp: "2 hours ago",
-    tag: "Report"
-  },
-  {
-    id: 2,
-    title: "Customer Feedback Summary",
-    description: "Net Promoter Score increased to 72, up from 68 last quarter",
-    timestamp: "5 hours ago",
-    tag: "Analysis"
-  },
-  {
-    id: 3,
-    title: "Market Trends Update",
-    description: "Emerging opportunities in the APAC region identified",
-    timestamp: "1 day ago",
-    tag: "Insight"
-  },
-  {
-    id: 4,
-    title: "Tech Stack Review",
-    description: "Recommendations for infrastructure optimization",
-    timestamp: "2 days ago",
-    tag: "Technical"
-  }
-];
-
-const mockNews = [
-  {
-    id: 1,
-    title: "Industry Report: AI Adoption Accelerates",
-    source: "Tech Daily",
-    timestamp: "1 hour ago",
-    category: "Technology"
-  },
-  {
-    id: 2,
-    title: "Market Analysis: Q1 Projections",
-    source: "Financial Times",
-    timestamp: "3 hours ago",
-    category: "Finance"
-  },
-  {
-    id: 3,
-    title: "New Regulations Impact SaaS Sector",
-    source: "Business Wire",
-    timestamp: "5 hours ago",
-    category: "Regulatory"
-  },
-  {
-    id: 4,
-    title: "Customer Experience Trends 2026",
-    source: "CX Magazine",
-    timestamp: "8 hours ago",
-    category: "Business"
-  },
-  {
-    id: 5,
-    title: "Cloud Infrastructure Innovations",
-    source: "Cloud News",
-    timestamp: "12 hours ago",
-    category: "Technology"
-  }
-];
-
 export const market_intelligence = {
     scout_output: {
       events: [
@@ -130,7 +30,17 @@ export const market_intelligence = {
           summary: "Vertex announces positive Phase 3 results for non-opioid painkiller, potential blockbuster rival.",
           strategic_impact: "High competitive threat to our pain management portfolio; necessitates review of marketing claims and differentiation strategy.",
           importance_score: 10
-        }
+        },
+        {
+          event_id: 4,
+          title: "Health & Pharma News | Latest Healthcare Stories",
+          companies: ["Global pharmaceutical companies"],
+          therapy_area: "General health and pharma news coverage",
+          event_type: "News | Drug Launches, FDA Approvals, Safety Warnings",
+          summary: "Latest international drug industry stories.",
+          strategic_impact: "Offers a global perspective on recent healthcare and pharma developments.",
+          importance_score: 7
+      }
       ]
     },
     signal_analysis: {
@@ -221,7 +131,7 @@ export const productIntelligence = [{
       growth_signal_strength: "Weak"
     },
     market_opportunity_score: 40,
-    overall_risk_score: 30
+    overall_risk_score: 75
   },
 
   usp_analysis: {
@@ -266,6 +176,110 @@ export const productIntelligence = [{
         "Shift marketing focus towards patient success stories and long-term treatment benefits to reinforce product value."
     }
   }
+},
+{
+  target_product: "paracetamol",
+
+  product_scout: {
+    similar_products: [
+      {
+        product_name: "Panadol Extra Strength",
+        company: "McNeil Consumer Healthcare",
+        therapy_area: "Pain Relief and Fever Reducer",
+        approval_status: "Approved",
+        estimated_market_share: "20%",
+        pricing_position: "Competitive"
+
+      },
+      {
+
+        product_name: "Tylenol 3 Extra Strength",
+
+        company: "McNeil Consumer Healthcare",
+
+        therapy_area: "Pain Relief and Fever Reducer",
+
+        approval_status: "Approved",
+
+        estimated_market_share: "15%",
+
+        pricing_position: "Low Cost"
+      }
+    ]
+  },
+
+  risk_and_sales_monitoring: {
+    risk_assessment: {
+
+      regulatory_risk: "Low",
+
+      pricing_pressure: "Medium",
+
+      competitive_threat: "High"
+
+    },
+    sales_momentum: {
+
+      trend_direction: "Stable",
+
+      growth_signal_strength: "Weak"
+
+    },
+    market_opportunity_score: 60,
+    overall_risk_score: 75
+  },
+
+  usp_analysis: {
+    comparators: [
+      {
+
+        product_name: "Panadol Extra Strength",
+
+        unique_selling_points: ["Stronger pain relief formulation"],
+
+        why_sales_are_strong: "High market share due to brand recognition and established trust in efficacy.",
+
+        innovation_factor: "Developed as a stronger, more effective version of paracetamol for severe pain."
+
+      },
+
+      {
+
+        product_name: "Tylenol 3 Extra Strength",
+
+        unique_selling_points: ["Combination with codeine"],
+
+        why_sales_are_strong: "Low cost and dual-action pain relief make it a popular choice for budget consumers.",
+
+        innovation_factor: "Innovative formulation that provides both analgesic and antitussive effects."
+
+      }
+    ]
+  },
+
+  strategy_recommendation: {
+    new_product_launch_strategy: {
+
+      pricing_strategy: "Penetrate the market with a competitive introductory price point below Tylenol 3 Extra Strength, leveraging its popularity and cost-effectiveness.",
+
+      positioning_strategy: "Position as an advanced formulation offering stronger pain relief without codeine for those seeking non-opioid options or with concerns about addiction risks.",
+
+      target_segment: "Budget-conscious consumers and individuals looking for a potent, yet safe alternative to opioids in severe pain management scenarios.",
+
+      partnership_recommendation: "Collaborate with healthcare providers specializing in chronic pain treatment to endorse the product's efficacy and safety profile."
+
+    },
+
+    existing_product_market_strategy: {
+
+      defensive_moves: ["Enhance brand loyalty programs", "Increase educational marketing on safe usage"],
+
+      pricing_adjustment: "Maintain current pricing to preserve perceived value while ensuring affordability.",
+
+      marketing_focus: "Highlight the product's long-standing efficacy and safety record, emphasizing its role in managing chronic pain effectively."      
+
+  }
+  }
 }];
 
 // Final Executive Report
@@ -287,22 +301,20 @@ export const finalExecutiveProductIntelligenceReport = [{
       "Metamorphin operates as a challenger in a highly competitive pain management market with declining sales momentum and elevated risk. Strategic repositioning, sharper differentiation, and partnerships aligned to personalized medicine are critical to stabilizing performance and unlocking future growth."
     },
     {
-      product_name: "pharmatinex",
-      overall_product_risk: "High",
+      product_name: "tylenolplus",
+      overall_product_risk: "Medium",
       market_position: "Challenger",
-      core_competitors: ["metamorphin", "reliefpro"],
-      monthly_sales_outlook: "Declining",
-      strongest_usp:
-        "Opportunity to differentiate through innovative positioning and alignment with personalized medicine trends.",
-      biggest_risk_factor:
-        "High pricing pressure and competitive intensity combined with weak sales momentum.",
+      core_competitors: ["tylenol extra strength"],
+      monthly_sales_outlook: "Growing",
+      strongest_usp: "Non-opioid pain relief with a potent formula.",
+      biggest_risk_factor: "Potential market resistance to new formulations and pricing strategies.",
       launch_strategy_recommendation:
-        "Pursue a focused launch targeting unmet pain management segments, supported by strategic partnerships, competitive pricing, and strong clinical differentiation messaging.",
+        "Adopt the proposed penetrative pricing strategy, emphasize non-opioid benefits in positioning, target budget-conscious consumers with chronic pain needs, and seek partnerships for endorsement from healthcare providers.",
       existing_product_strategy_update:
-        "Defend share through tiered pricing, expanded patient assistance programs, and education-led marketing emphasizing safety and long-term outcomes.",
+        "Maintain current pricing while enhancing brand loyalty programs to preserve perceived value. Increase educational marketing on safe usage without altering the product's efficacy and safety record narrative.",
       executive_summary:
-        "Metamorphin operates as a challenger in a highly competitive pain management market with declining sales momentum and elevated risk. Strategic repositioning, sharper differentiation, and partnerships aligned to personalized medicine are critical to stabilizing performance and unlocking future growth."
-    }];
+        "Tylenol Plus is poised for growth with a strong USP of non-opioid, potent pain relief; however, faces medium risk due to potential resistance. A strategic launch focusing on affordability, targeted marketing, and healthcare partnerships will be key."
+    }
+  ];
 
 
-export {mockChartData, mockInfo, mockInsights, mockNews, mockSnippets}
