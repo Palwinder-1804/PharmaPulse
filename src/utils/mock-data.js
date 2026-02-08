@@ -192,92 +192,221 @@ export const productIntelligence = [{
 
       },
       {
-
         product_name: "Tylenol 3 Extra Strength",
-
         company: "McNeil Consumer Healthcare",
-
         therapy_area: "Pain Relief and Fever Reducer",
-
         approval_status: "Approved",
-
         estimated_market_share: "15%",
-
         pricing_position: "Low Cost"
       }
     ]
   },
-
   risk_and_sales_monitoring: {
     risk_assessment: {
-
       regulatory_risk: "Low",
-
       pricing_pressure: "Medium",
-
       competitive_threat: "High"
-
     },
     sales_momentum: {
-
       trend_direction: "Stable",
-
       growth_signal_strength: "Weak"
-
     },
     market_opportunity_score: 60,
     overall_risk_score: 75
   },
-
   usp_analysis: {
     comparators: [
       {
-
         product_name: "Panadol Extra Strength",
-
         unique_selling_points: ["Stronger pain relief formulation"],
-
         why_sales_are_strong: "High market share due to brand recognition and established trust in efficacy.",
-
         innovation_factor: "Developed as a stronger, more effective version of paracetamol for severe pain."
 
       },
 
       {
-
         product_name: "Tylenol 3 Extra Strength",
-
         unique_selling_points: ["Combination with codeine"],
-
         why_sales_are_strong: "Low cost and dual-action pain relief make it a popular choice for budget consumers.",
-
         innovation_factor: "Innovative formulation that provides both analgesic and antitussive effects."
-
       }
     ]
   },
 
   strategy_recommendation: {
     new_product_launch_strategy: {
-
       pricing_strategy: "Penetrate the market with a competitive introductory price point below Tylenol 3 Extra Strength, leveraging its popularity and cost-effectiveness.",
-
       positioning_strategy: "Position as an advanced formulation offering stronger pain relief without codeine for those seeking non-opioid options or with concerns about addiction risks.",
-
       target_segment: "Budget-conscious consumers and individuals looking for a potent, yet safe alternative to opioids in severe pain management scenarios.",
-
       partnership_recommendation: "Collaborate with healthcare providers specializing in chronic pain treatment to endorse the product's efficacy and safety profile."
+    },
+    existing_product_market_strategy: {
+      defensive_moves: ["Enhance brand loyalty programs", "Increase educational marketing on safe usage"],
+      pricing_adjustment: "Maintain current pricing to preserve perceived value while ensuring affordability.",
+      marketing_focus: "Highlight the product's long-standing efficacy and safety record, emphasizing its role in managing chronic pain effectively."      
+  }
+  }
+},
+{
+  target_product: "combiflam",
+
+  product_scout: {
+    similar_products: [
+      {
+        product_name: "Panadol Extra Strength",
+        company: "McNeil Consumer Healthcare",
+        therapy_area: "Pain Relief and Fever Reducer",
+        approval_status: "Approved",
+        estimated_market_share: "20%",
+        pricing_position: "Competitive"
+
+      },
+      {
+        product_name: "Tylenol 3 Extra Strength",
+        company: "McNeil Consumer Healthcare",
+        therapy_area: "Pain Relief and Fever Reducer",
+        approval_status: "Approved",
+        estimated_market_share: "15%",
+        pricing_position: "Low Cost"
+      }
+    ]
+  },
+  risk_and_sales_monitoring: {
+    risk_assessment: {
+      regulatory_risk: "Low",
+      pricing_pressure: "Medium",
+      competitive_threat: "High"
+  },
+    sales_momentum: {
+      trend_direction: "Growing",
+      growth_signal_strength: "Strong"
+  },
+  market_opportunity_score: 75,
+  overall_risk_score: 60
+  },
+  usp_analysis: {
+    comparators: [
+      {
+      product_name: "combiflam",
+      unique_selling_points: ["Effective for acne treatment with fewer side effects"],
+      why_sales_are_strong: "High patient satisfaction due to lower incidence of skin irritation.",
+      innovation_factor: "Innovative formulation that reduces the risk of antibiotic resistance."
+    }
+    ]
+  },
+
+  strategy_recommendation: {
+    new_product_launch_strategy: {
+      pricing_strategy: "Value-based pricing reflecting the innovative formulation and effectiveness.",
+      positioning_strategy: "Position as a cutting-edge treatment for acne with an emphasis on patient wellbeing due to reduced side effects.",
+      target_segment: "Adults aged 18-35 seeking effective, safe skin treatments without harsh chemicals or antibiotics.",
+      partnership_recommendation: "Collaborate with dermatology clinics and skincare influencers to build credibility among target demographics."
+
+  },
+    existing_product_market_strategy: {
+
+    defensive_moves: [
+
+      "Enhance patient education on the benefits of combiflam's unique formulation.",
+
+      "Increase visibility in dermatology conferences and seminars to reinforce expert endorsement."
+
+    ],
+
+    pricing_adjustment: "Maintain current pricing but offer bundled deals with complementary skincare products for a holistic approach.",
+
+    marketing_focus: "Highlight combiflam's role in preventing antibiotic resistance and promoting long-term skin health."
+
+  }
+  }
+},
+{
+  target_product: "amoxycillin",
+
+  product_scout: {
+    similar_products: [
+      {
+
+      product_name: "Ampicillin",
+
+      company: "SmithKline Beecham Pharmaceuticals (now part of GlaxoSmithKline)",
+
+      therapy_area: "Antibiotics - Penicillins",
+
+      approval_status: "Approved",
+
+      estimated_market_share: "20%",
+
+      pricing_position: "Competitive"
 
     },
 
+    {
+
+      product_name: "Piperacillin/Tazobactam (Zosyn)",
+
+      company: "AstraZeneca Pharmaceuticals",
+
+      therapy_area: "Antibiotics - Penicillins + beta-lactamase inhibitor combination therapy",
+
+      approval_status: "Approved",
+
+      estimated_market_share: "15%",
+
+      pricing_position: "Low Cost"
+
+    }
+    ]
+  },
+  risk_and_sales_monitoring: {
+    risk_assessment: {
+      regulatory_risk: "Low",
+      pricing_pressure: "Medium",
+      competitive_threat: "High"
+  },
+    sales_momentum: {
+      trend_direction: "Stable",
+      growth_signal_strength: "Weak"
+  },
+  market_opportunity_score: 65,
+  overall_risk_score: 70
+  },
+  usp_analysis: {
+    comparators: [
+      {
+
+      product_name: "Ampicillin",
+
+      unique_selling_points: ["Established brand recognition"],
+
+      why_sales_are_strong: "Long-standing trust in the product's efficacy and safety profile.",
+
+      innovation_factor: "Lacks recent innovations compared to newer antibiotics."
+
+    },
+    {
+
+      product_name: "Piperacillin/Tazobactam (Zosyn)",
+
+      unique_selling_points: ["Effective against a broad spectrum of bacteria", "Beta-lactamase inhibitor"],
+      why_sales_are_strong: "High demand for combination therapies that cover resistant strains.",
+      innovation_factor: "Recent approvals and the inclusion of tazobactam to combat resistance."
+
+    }
+    ]
+  },
+
+  strategy_recommendation: {
+    new_product_launch_strategy: {
+      pricing_strategy: "Value-based pricing considering the efficacy and safety profile to capitalize on established trust.",
+      positioning_strategy: "As a next-generation antibiotic with enhanced spectrum of activity, targeted at resistant bacterial strains where needed most.",
+      target_segment: "Healthcare providers in regions facing high rates of resistance and patients requiring broad-spectrum coverage",
+      partnership_recommendation: "Collaborate with health organizations to promote awareness about antibiotic resistance, positioning the new product as a solution."
+  },
     existing_product_market_strategy: {
-
-      defensive_moves: ["Enhance brand loyalty programs", "Increase educational marketing on safe usage"],
-
-      pricing_adjustment: "Maintain current pricing to preserve perceived value while ensuring affordability.",
-
-      marketing_focus: "Highlight the product's long-standing efficacy and safety record, emphasizing its role in managing chronic pain effectively."      
-
+      defensive_moves: ["Invest in R&D for next-generation formulations", "Expand into untapped markets with lower competition"],
+      pricing_adjustment: "Maintain competitive pricing while ensuring affordability to retain market share.",
+      marketing_focus: "Highlight the long history of trust and safety, emphasizing ongoing commitment to patient health."
   }
   }
 }];
@@ -314,7 +443,31 @@ export const finalExecutiveProductIntelligenceReport = [{
         "Maintain current pricing while enhancing brand loyalty programs to preserve perceived value. Increase educational marketing on safe usage without altering the product's efficacy and safety record narrative.",
       executive_summary:
         "Tylenol Plus is poised for growth with a strong USP of non-opioid, potent pain relief; however, faces medium risk due to potential resistance. A strategic launch focusing on affordability, targeted marketing, and healthcare partnerships will be key."
-    }
+    },
+    {
+      product_name: "combiflam",                                                                                                                           
+      overall_product_risk: "Medium",                                                                                                                      
+      market_position: "Leader",                                                                                                                           
+      core_competitors: ["AcneFreeX", "ClearSkinPlus"],                                                                                                    
+      monthly_sales_outlook: "Growing",                                                                                                                    
+      strongest_usp: "Innovative formulation with reduced side effects and no antibiotics.",                                                               
+      biggest_risk_factor: "Potential market saturation due to increasing number of acne treatments available.",                                           
+      launch_strategy_recommendation: "Implement value-based pricing, emphasize patient wellbeing in positioning and target adults aged 18-35 with a focus on partnerships for credibility.",                                                                                                                 
+      existing_product_strategy_update: "Maintain current pricing but offer bundled deals. Enhance visibility at dermatology events to reinforce expert endorsement and highlight combiflam's role in preventing antibiotic resistance.",                                                                        
+      executive_summary: "Combiflam, a leader with innovative formulation for acne treatment, faces medium risk due to market saturation. The launch strategy should focus on value-based pricing and partnerships targeting adults seeking safe treatments."                                                 
+    },
+    {   
+    product_name: "amoxycillin",                                                                                                                                    
+    overall_product_risk: "Medium",                                                                                                                      
+    market_position: "Leader | Challenger | Niche | Declining",                                                                                          
+    core_competitors: ["Generic Antibiotic Manufacturers"],                                                                                              
+    monthly_sales_outlook: "Growing",                                                                                                                    
+    strongest_usp: "Enhanced spectrum of activity targeted at resistant bacterial strains.",                                                             
+    biggest_risk_factor: "Potential for rapid resistance development leading to decreased efficacy over time.",                                          
+    launch_strategy_recommendation: "Implement value-based pricing and position the new product as a solution in collaboration with health organizations, focusing on regions facing high rates of antibiotic resistance.",                                                                         
+    existing_product_strategy_update: "Maintain competitive pricing while investing in R&D for next-generation formulations to stay ahead of the competition and expand into untapped markets with lower competition.",                                                                                   
+    executive_summary: "The new antibiotic product, leveraging its enhanced spectrum against resistant strains, is poised for growth. Strategic pricing and partnerships are recommended to solidify market leadership amidst competitive pressures."                                                            
+  }   
   ];
 
 
