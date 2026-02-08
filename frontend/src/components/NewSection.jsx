@@ -1,10 +1,51 @@
 import { ChevronLeft, Newspaper, TrendingUp, AlertTriangle, Target, Activity, ArrowRight } from "lucide-react";
-import { market_intelligence } from "../utils/mock-data";
+import { getIntelligenceData } from "../utils/mock-data";
 
 export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
-  const { scout_output, signal_analysis, strategic_insights, market_supervisor_summary } = market_intelligence;
-  const news = scout_output.events;
+    const { market_intelligence = {} } = getIntelligenceData() || {};
 
+const {
+  scout_output,
+  signal_analysis,
+  strategic_insights = {},
+  market_supervisor_summary = {}
+} = market_intelligence;
+
+// Normalize scout_output to always be an array
+const news = Array.isArray(scout_output)
+  ? scout_output
+  : scout_output
+  ? [scout_output]
+  : [];
+
+// Normalize signal_analysis to always be an array
+const signals = Array.isArray(signal_analysis)
+  ? signal_analysis
+  : signal_analysis
+  ? [signal_analysis]
+  : [];
+
+// Safe defaults for nested fields
+const {
+  market_trend = "N/A",
+  threat_level = "N/A",
+  opportunity_areas = [],
+  competitive_pressure_score = 0,
+  recommended_moves = []
+} = strategic_insights;
+
+const {
+  risk_index = 0,
+  executive_summary = "No executive summary available.",
+  immediate_actions = []
+} = market_supervisor_summary;
+
+    console.log("NewsSection received market_intelligence:", market_intelligence);
+    console.log("NewsSection received scout_output:", scout_output);
+    console.log("NewsSection received signal_analysis:", signal_analysis);
+    console.log("NewsSection received strategic_insights:", strategic_insights);
+    console.log("NewsSection received market_supervisor_summary:", market_supervisor_summary);
+    // const { scout_output, signal_analysis, strategic_insights, market_supervisor_summary } = market_intelligence || {};
   if (isExpanded) {
     return (
       <div className="bg-slate-50 min-h-full">
@@ -32,39 +73,49 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
             {/* Top Metrics Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <MetricCard 
-                    label="Market Trend" 
-                    value={strategic_insights.market_trend} 
-                    icon={<TrendingUp size={18} />}
-                    color="blue"
-                />
-                <MetricCard 
-                    label="Threat Level" 
-                    value={strategic_insights.threat_level} 
-                    icon={<AlertTriangle size={18} />}
-                    color={strategic_insights.threat_level === 'High' ? 'red' : 'yellow'}
-                />
-                <MetricCard 
-                    label="Risk Index" 
-                    value={`${market_supervisor_summary.risk_index}/10`} 
-                    icon={<Activity size={18} />}
-                    color="orange"
-                    footer={
-                        <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
-                            <div className="h-full bg-orange-500 rounded-full" style={{ width: `${market_supervisor_summary.risk_index * 10}%` }}></div>
-                        </div>
-                    }
-                />
-                <MetricCard 
-                    label="Comp. Pressure" 
-                    value={`${strategic_insights.competitive_pressure_score}/10`} 
-                    icon={<Target size={18} />}
-                    color="purple"
-                    footer={
-                        <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
-                            <div className="h-full bg-purple-500 rounded-full" style={{ width: `${strategic_insights.competitive_pressure_score * 10}%` }}></div>
-                        </div>
-                    }
-                />
+  label="Market Trend" 
+  value={market_trend} 
+  icon={<TrendingUp size={18} />}
+  color="blue"
+/>
+
+<MetricCard 
+  label="Threat Level" 
+  value={threat_level} 
+  icon={<AlertTriangle size={18} />}
+  color={threat_level === 'High' ? 'red' : 'yellow'}
+/>
+
+<MetricCard 
+  label="Risk Index" 
+  value={`${risk_index}/10`} 
+  icon={<Activity size={18} />}
+  color="orange"
+  footer={
+    <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
+      <div
+        className="h-full bg-orange-500 rounded-full"
+        style={{ width: `${risk_index * 10}%` }}
+      ></div>
+    </div>
+  }
+/>
+
+<MetricCard 
+  label="Comp. Pressure" 
+  value={`${competitive_pressure_score}/10`} 
+  icon={<Target size={18} />}
+  color="purple"
+  footer={
+    <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
+      <div
+        className="h-full bg-purple-500 rounded-full"
+        style={{ width: `${competitive_pressure_score * 10}%` }}
+      ></div>
+    </div>
+  }
+/>
+
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -74,10 +125,10 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
                     {/* Executive Summary */}
                     <SectionCard title="Market Supervisor Executive Summary" className="bg-gradient-to-br from-slate-900 to-slate-800 text-white border-none shadow-lg">
                          <p className="text-slate-100 leading-relaxed font-light text-lg">
-                            {market_supervisor_summary.executive_summary}
+                            {executive_summary}
                          </p>
                          <div className="mt-6 flex flex-wrap gap-3">
-                             {market_supervisor_summary.immediate_actions.map((action, i) => (
+                             {immediate_actions.map((action, i) => (
                                  <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/10 px-3 py-2 rounded-lg text-sm text-slate-200 flex items-center gap-2">
                                      <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
                                      {action}
@@ -89,31 +140,44 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
                     {/* Signal Analysis */}
                      <SectionCard title="Signal Analysis & Interpretation">
                         <div className="space-y-4">
-                            {signal_analysis.signals.map((signal, idx) => (
-                                <div key={idx} className="bg-slate-50 rounded-xl p-4 border border-slate-100 hover:border-blue-200 transition-colors">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h4 className="font-semibold text-slate-800">{signal.event_title}</h4>
-                                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded">
-                                            Confidence: {signal.confidence_score}/10
-                                        </span>
-                                    </div>
-                                    <p className="text-sm text-slate-600 mb-3">{signal.reason}</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {signal.category.split('|').map((cat, i) => (
-                                            <span key={i} className="text-xs text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded shadow-sm">
-                                                {cat.trim()}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
+                            {signals.map((signal, idx) => (
+  <div
+    key={idx}
+    className="bg-slate-50 rounded-xl p-4 border border-slate-100 hover:border-blue-200 transition-colors"
+  >
+    <div className="flex justify-between items-start mb-2">
+      <h4 className="font-semibold text-slate-800">
+        {signal.event_title || "Untitled Event"}
+      </h4>
+      <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded">
+        Confidence: {signal.confidence_score || 0}/10
+      </span>
+    </div>
+
+    <p className="text-sm text-slate-600 mb-3">
+      {signal.reason || "No analysis available."}
+    </p>
+
+    <div className="flex flex-wrap gap-2">
+      {(signal.category?.split('|') || []).map((cat, i) => (
+        <span
+          key={i}
+          className="text-xs text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded shadow-sm"
+        >
+          {cat.trim()}
+        </span>
+      ))}
+    </div>
+  </div>
+))}
+
                         </div>
                      </SectionCard>
 
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <SectionCard title="Strategic Opportunities">
                              <ul className="space-y-3">
-                                 {strategic_insights.opportunity_areas.map((opp, i) => (
+                                 {opportunity_areas.map((opp, i) => (
                                      <li key={i} className="flex gap-3 items-start">
                                          <span className="bg-emerald-100 text-emerald-600 p-1 rounded mt-0.5">
                                              <TrendingUp size={14} />
@@ -125,7 +189,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
                          </SectionCard>
                          <SectionCard title="Recommended Moves" className="bg-blue-50/50 border-blue-100">
                              <ul className="space-y-3">
-                                 {strategic_insights.recommended_moves.map((move, i) => (
+                                 {recommended_moves.map((move, i) => (
                                      <li key={i} className="flex gap-3 items-start">
                                          <span className="text-blue-500 mt-1">•</span>
                                          <span className="text-sm text-slate-700">{move}</span>
@@ -137,7 +201,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
                 </div>
 
                 {/* Right Column: News Feed */}
-                <div className="lg:col-span-1">
+                {/* <div className="lg:col-span-1">
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm sticky top-24">
                         <div className="p-4 border-b border-gray-200 flex justify-between items-center">
                             <h3 className="font-bold text-slate-800">Raw News Feed</h3>
@@ -169,7 +233,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
                             ))}
                         </div>
                     </div>
-                </div>
+                </div> */}
 
             </div>
 
@@ -188,7 +252,8 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
       <div className="flex items-center justify-between mb-4">
         <div>
             <h3 className="text-sm font-bold text-gray-900">Market Intel</h3>
-            <p className="text-xs text-slate-500">{scout_output.events.length} New Signals</p>
+            <p className="text-xs text-slate-500">{news.length} New Signals
+ New Signals</p>
         </div>
         <div className="relative">
             <Newspaper size={20} className="text-gray-400 group-hover:text-blue-500 transition-colors" />
@@ -203,7 +268,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
         
         {/* Mini Highlights */}
         <div className="space-y-3">
-             {news.slice(0, 3).map((item) => (
+             {/* {news.slice(0, 3).map((item) => (
                <div key={item.event_id} className="pb-3 border-b border-gray-100 last:border-0">
                  <h4 className="text-xs font-medium text-gray-900 mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">
                    {item.title}
@@ -213,7 +278,7 @@ export default function NewsSection ({ isExpanded, onExpand, onCollapse }) {
                     <span className="text-[10px] font-semibold text-slate-500">Score: {item.importance_score}</span>
                  </div>
                </div>
-             ))}
+             ))} */}
         </div>
 
         <button className="w-full flex items-center justify-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 py-2 rounded-lg group-hover:bg-blue-100 transition-colors">
@@ -244,7 +309,18 @@ function MetricCard({ label, value, icon, color, footer }) {
                 </div>
             </div>
             <div>
-                <div className="text-2xl font-bold text-slate-800">{value}</div>
+                <div className="relative overflow-hidden w-full">
+  <div
+    className={`text-2xl font-bold text-slate-800 whitespace-nowrap ${
+      typeof value === "string" && value.length > 25
+        ? "animate-marquee"
+        : ""
+    }`}
+  >
+    {value}
+  </div>
+</div>
+
             </div>
             {footer}
         </div>

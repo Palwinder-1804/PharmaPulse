@@ -2,15 +2,25 @@ import json
 import os
 import re
 from datetime import datetime
+import spacy
 
 DATA_DIR = "data"
 FRONTEND_FILE = os.path.join(DATA_DIR, "frontend_intelligence.json")
+
+# ------------------------------
+# Load NLP model safely
+# ------------------------------
+try:
+    nlp = spacy.load("en_core_web_sm")
+except:
+    raise Exception(
+        "SpaCy model not found. Run: python -m spacy download en_core_web_sm"
+    )
 
 
 # =========================================
 # ENSURE DATA FOLDER
 # =========================================
-
 def ensure_data_folder():
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
@@ -19,25 +29,17 @@ def ensure_data_folder():
 # =========================================
 # ROBUST JSON EXTRACTOR
 # =========================================
-
 def extract_json(text):
-    """
-    Extracts the FIRST valid JSON object from messy LLM output.
-    Handles:
-    - Markdown ```json blocks
-    - Multiple JSON objects
-    - Extra text before/after JSON
-    """
-
     if not text:
         return {}
 
-    # Remove markdown wrappers
-    text = text.replace("```json", "")
-    text = text.replace("```", "")
-    text = text.strip()
+    text = text.replace("```json", "").replace("```", "").strip()
 
-    # Find all possible JSON blocks (non-greedy)
+    try:
+        return json.loads(text)
+    except:
+        pass
+
     possible_json_blocks = re.findall(r"\{[\s\S]*?\}", text)
 
     for block in possible_json_blocks:
@@ -50,83 +52,164 @@ def extract_json(text):
 
 
 # =========================================
+# SMART COMPANY EXTRACTION
+# =========================================
+def extract_companies_from_text(text):
+    if not text:
+        return []
+
+    doc = nlp(text)
+    companies = []
+
+    for ent in doc.ents:
+        if ent.label_ == "ORG":
+            cleaned = ent.text.strip()
+
+            # Remove obvious noise
+            if len(cleaned) < 3:
+                continue
+            if cleaned.lower() in ["fda", "ema", "who"]:
+                continue
+
+            companies.append(cleaned)
+
+    return list(set(companies))
+
+
+# =========================================
+# EVENT TYPE DETECTOR
+# =========================================
+def detect_event_type(text):
+    text = text.lower()
+
+    mapping = {
+        "FDA Approval": ["fda approval", "approved by fda"],
+        "Drug Launch": ["launches", "introduces", "rollout"],
+        "M&A": ["acquires", "acquisition", "merger"],
+        "Pricing": ["price increase", "pricing strategy"],
+        "Expansion": ["expands", "new facility", "expansion"]
+    }
+
+    for event, keywords in mapping.items():
+        for keyword in keywords:
+            if keyword in text:
+                return event
+
+    return "Market Update"
+
+
+# =========================================
+# AUTO SIGNAL GENERATOR
+# =========================================
+def generate_signal(event_type):
+
+    mapping = {
+        "FDA Approval": {
+            "signal_strength": "High",
+            "impact_score": 85,
+            "market_impact": "Bullish",
+            "competitor_pressure": "High",
+            "time_horizon": "Short to Medium Term"
+        },
+        "Drug Launch": {
+            "signal_strength": "High",
+            "impact_score": 75,
+            "market_impact": "Positive",
+            "competitor_pressure": "Medium",
+            "time_horizon": "Medium Term"
+        },
+        "M&A": {
+            "signal_strength": "Very High",
+            "impact_score": 95,
+            "market_impact": "Transformational",
+            "competitor_pressure": "High",
+            "time_horizon": "Long Term"
+        }
+    }
+
+    return mapping.get(event_type, {
+        "signal_strength": "Medium",
+        "impact_score": 50,
+        "market_impact": "Neutral",
+        "competitor_pressure": "Low",
+        "time_horizon": "Short Term"
+    })
+
+
+# =========================================
 # MAIN SAVE FUNCTION
 # =========================================
-
 def save_frontend_format(market_data, product_data):
 
     ensure_data_folder()
 
-    # -------------------------------
-    # CLEAN MARKET
-    # -------------------------------
+    raw_scout_text = market_data.get("scout", "")
+    raw_signal_text = market_data.get("signal", "")
+    raw_article_text = market_data.get("raw_article_text", "")
+    raw_insight = market_data.get("insight", "")
+    raw_supervisor = market_data.get("supervisor", "")
+
+    scout_output = extract_json(raw_scout_text) or {}
+    signal_analysis = extract_json(raw_signal_text) or {}
+
+    combined_text = f"{raw_article_text} {raw_scout_text}"
+
+    # --------------------------------------------------
+    # SELF-HEALING INTELLIGENCE LOGIC
+    # --------------------------------------------------
+
+    # Ensure companies
+    if not scout_output.get("companies"):
+        scout_output["companies"] = extract_companies_from_text(combined_text)
+
+    # Ensure event type
+    if not scout_output.get("event_type"):
+        scout_output["event_type"] = detect_event_type(combined_text)
+
+    # Ensure signal
+    if not signal_analysis:
+        signal_analysis = generate_signal(
+            scout_output.get("event_type")
+        )
+
+    # Add metadata
+    scout_output["processed_at"] = datetime.utcnow().isoformat()
+    scout_output["company_count"] = len(scout_output.get("companies", []))
 
     clean_market = {
-        "scout_output": extract_json(market_data.get("scout", "")),
-        "signal_analysis": extract_json(market_data.get("signal", "")),
-        "strategic_insights": extract_json(market_data.get("insight", "")),
+        "scout_output": scout_output,
+        "signal_analysis": signal_analysis,
+        "strategic_insights": extract_json(raw_insight),
         "market_supervisor_summary": (
-            extract_json(market_data.get("supervisor", {}).get("raw_output", ""))
-            if isinstance(market_data.get("supervisor"), dict)
-            else extract_json(market_data.get("supervisor", ""))
-        )
+            extract_json(raw_supervisor.get("raw_output", ""))
+            if isinstance(raw_supervisor, dict)
+            else extract_json(raw_supervisor)
+        ),
     }
 
-    # -------------------------------
-    # CLEAN PRODUCT
-    # -------------------------------
-
-    clean_product = {
-        "target_product": product_data.get("product_name"),
-        "product_scout": extract_json(product_data.get("scout", "")),
-        "risk_and_sales_monitoring": extract_json(product_data.get("risk_sales", "")),
-        "usp_analysis": extract_json(product_data.get("usp_analysis", "")),
-        "strategy_recommendation": extract_json(product_data.get("strategy", ""))
-    }
-
-    clean_final_report = (
-        extract_json(product_data.get("supervisor", {}).get("raw_output", ""))
-        if isinstance(product_data.get("supervisor"), dict)
-        else extract_json(product_data.get("supervisor", ""))
-    )
-
-    # -------------------------------
-    # LOAD EXISTING FILE
-    # -------------------------------
-
+    # --------------------------------------------------
+    # LOAD EXISTING FILE SAFELY
+    # --------------------------------------------------
     if os.path.exists(FRONTEND_FILE):
-        with open(FRONTEND_FILE, "r", encoding="utf-8") as f:
-            existing_data = json.load(f)
+        try:
+            with open(FRONTEND_FILE, "r", encoding="utf-8") as f:
+                existing_data = json.load(f)
+        except:
+            existing_data = {}
     else:
-        existing_data = {
-            "market_intelligence": {},
-            "productIntelligence": [],
-            "finalExecutiveProductIntelligenceReport": []
-        }
+        existing_data = {}
 
-    # -------------------------------
-    # UPDATE MARKET
-    # -------------------------------
+    existing_data.setdefault("market_intelligence", {})
+    existing_data.setdefault("productIntelligence", [])
+    existing_data.setdefault("finalExecutiveProductIntelligenceReport", [])
 
     existing_data["market_intelligence"] = clean_market
 
-    # -------------------------------
-    # APPEND PRODUCT HISTORY
-    # -------------------------------
-
-    if clean_product["target_product"]:
-        existing_data["productIntelligence"].append(clean_product)
-
-    if clean_final_report:
-        existing_data["finalExecutiveProductIntelligenceReport"].append(
-            clean_final_report
-        )
-
-    # -------------------------------
-    # SAVE FILE
-    # -------------------------------
-
+    # --------------------------------------------------
+    # SAVE
+    # --------------------------------------------------
     with open(FRONTEND_FILE, "w", encoding="utf-8") as f:
         json.dump(existing_data, f, indent=4)
 
+    print("✅ Market intelligence saved successfully.")
     return FRONTEND_FILE

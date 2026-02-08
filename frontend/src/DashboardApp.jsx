@@ -1,15 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { mockChartData, mockInfo, mockInsights, mockNews, mockSnippets } from "./utils/mock-data";
 import Header from "./components/Header";
 import NewsSection from "./components/NewSection";
 import SearchBar from "./components/SearchBar";
 import Sidebar from "./components/Sidebar";
 import AnalyticsPage from "./components/AnalyticsPage";
+import { setIntelligenceData, getIntelligenceData } from "./utils/mock-data";
+
 
 export default function DashboardApp () {
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [view, setView] = useState('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
+  
+
+useEffect(() => {
+  fetch("http://localhost:8000/api/intelligence")
+    .then(res => res.json())
+    .then(data => {
+      setIntelligenceData(data);
+      console.log("Fetched intelligence data from backend:", data);
+      console.log("Stored in JS memory");
+    });
+}, []);
 
   const handleSearch = (query) => {
     setSearchQuery(query.toLowerCase().trim());
@@ -75,7 +89,6 @@ export default function DashboardApp () {
                     <NewsSection 
                       isExpanded={false}
                       onExpand={handleExpandNews}
-                      news={mockNews}
                     />
                   </div>
                 )}
@@ -88,7 +101,6 @@ export default function DashboardApp () {
                 <NewsSection 
                   isExpanded={true}
                   onCollapse={handleCollapseNews}
-                  news={mockNews}
                 />
               </div>
             )}

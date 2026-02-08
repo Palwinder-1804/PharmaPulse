@@ -1,3 +1,13 @@
+let intelligenceData = null;
+
+export const setIntelligenceData = (data) => {
+  intelligenceData = data;
+};
+
+export const getIntelligenceData = () => {
+  return intelligenceData;
+};
+
 const mockInsights = {
   title: "Key Insights",
   metrics: [
