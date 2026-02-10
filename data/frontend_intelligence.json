@@ -2,63 +2,50 @@
     "market_intelligence": {
         "scout_output": {
             "event_id": 2,
-            "title": "What's New Related to Drugs",
+            "title": "Merck Agrees to Acquire Cidara Therapeutics",
             "companies": [
-                "Analysis"
+                "Merck",
+                "Cidara Therapeutics"
             ],
             "therapy_area": "",
-            "event_type": "FDA Updates",
-            "summary": "Latest FDA updates on drugs.",
-            "strategic_impact": "Important for understanding recent regulatory changes that could affect drug approvals and market entry, influencing competition dynamics within the pharmaceutical industry.",
-            "importance_score": 1,
-            "processed_at": "2026-02-08T06:11:08.139239",
-            "company_count": 1
+            "event_type": "M&A",
+            "summary": "Merck acquires a clinical-stage bio/pharmaceutical company.",
+            "strategic_impact": "Strengthens Merck's pipeline and market position.",
+            "processed_at": "2026-02-08T10:00:21.506976",
+            "company_count": 2
         },
         "signal_analysis": {
-            "signals": [
-                {
-                    "event_id": 1,
-                    "event_title": "Fierce Pharma Biopharma News & Insights",
-                    "category": "Market Opportunity | Competitive Threat",
-                    "impact_score": 8,
-                    "confidence_score": 9,
-                    "reason": "The event provides insights into the pharmaceutical industry's current state and recent developments that could influence competition."
-                },
-                {
-                    "event_id": 2,
-                    "event_title": "What's New Related to Drugs",
-                    "category": "Regulatory Risk",
-                    "impact_score": 9,
-                    "confidence_score": 10,
-                    "reason": "The event is important for understanding recent regulatory changes that could affect drug approvals and market entry."
-                }
-            ]
+            "signal_strength": "Very High",
+            "impact_score": 95,
+            "market_impact": "Transformational",
+            "competitor_pressure": "High",
+            "time_horizon": "Long Term"
         },
         "strategic_insights": {
-            "market_trend": "Evolving with biotechnology advancements",
-            "threat_level": "High",
+            "market_trend": "Stable with potential growth in brand momentum",
+            "threat_level": "Low",
             "opportunity_areas": [
-                "Personalized Medicine"
+                "Brand Momentum"
             ],
-            "competitive_pressure_score": 8,
+            "competitive_pressure_score": 4,
             "recommended_moves": [
-                "Increase investment in genomics research to develop personalized medicine solutions.",
-                "Strengthen regulatory affairs team for better navigation of the new drug approval landscape."
+                "Invest in marketing to capitalize on brand momentum.",
+                "Explore strategic partnerships for pipeline expansion."
             ],
-            "strategic_summary": "The pharmaceutical industry is facing high competitive pressure with a significant opportunity in personalized medicine, driven by biotechnology advancements. Strategies should focus on genomics research and regulatory expertise to maintain market positioning."
+            "strategic_summary": "The M&A event indicates a positive shift towards strengthening the company's position and growth potential, suggesting an opportunity area of 'Brand Momentum'. The competitive pressure score is moderate due to industry-wide market opportunities. Recommended moves include investing in brand visibility initiatives and seeking partnerships."
         },
         "market_supervisor_summary": {
-            "overall_market_condition": "Evolving with biotechnology advancements",
-            "top_priority": "Increase investment in genomics research to develop personalized medicine solutions.",
-            "risk_index": 9,
+            "overall_market_condition": "Stable with potential growth",
+            "top_priority": "Brand Momentum",
+            "risk_index": 3,
             "capital_allocation_focus": [
-                "Genomics Research"
+                "Marketing Investment"
             ],
             "immediate_actions": [
-                "Allocate additional funds towards the development of a state-of-the-art genomics research facility.",
-                "Hire top experts in genetics and bioinformatics to lead our personalized medicine initiatives."
+                "Increase marketing budget for brand visibility campaigns.",
+                "Identify and approach potential partnership targets."
             ],
-            "executive_summary": "To capitalize on high competitive pressure, we must prioritize investment in genomics for personalized medicine. This strategic focus will position us at the forefront of biotechnological advancements and drive our growth amidst evolving market trends."
+            "executive_summary": "Leverage growing Brand Momentum through targeted Marketing Investment, while exploring strategic alliances to sustain competitive advantage in a stable market with growth opportunities. Moderate risk due to industry competition; proactive measures essential."
         }
     },
     "productIntelligence": [
